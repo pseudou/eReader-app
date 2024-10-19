@@ -32,6 +32,14 @@ class PDFViewerScreen extends StatelessWidget {
                   canShowScrollHead: false,
                   enableDoubleTapZooming: true,
                   pageLayoutMode: PdfPageLayoutMode.single,
+                  enableTextSelection: true, // Enable text selection
+                  onTextSelectionChanged: (PdfTextSelectionChangedDetails details) {
+                    // Check if text is selected
+                    if (details.selectedText != null && details.selectedText!.isNotEmpty) {
+                      // Display selected text (you can handle this differently if needed)
+                      print("Selected text: ${details.selectedText}"); // Debug print
+                    }
+                  },
                 );
               } else {
                 return Center(child: Text('PDF not found'));
