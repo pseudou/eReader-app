@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../home/data/models/book.dart';
 import '../../../../core/utils/pdf_helper.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
 
 class PDFViewerScreen extends StatefulWidget {
   final Book book;
@@ -97,13 +100,75 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     );
   }
 
-  void analyzeSelectedText(BuildContext context, String selectedText) {
+  Future<void> analyzeSelectedText(BuildContext context, String selectedText) async {
     print("Analyzing: $selectedText");
+
+    // Show loading indicator
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text('Analyzing...'),
+        content: CupertinoActivityIndicator(),
+      ),
+    );
+
+    try {
+      // Call the API with a 30-second timeout
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:5000'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'text': selectedText}),
+      ).timeout(Duration(seconds: 30));
+
+      // Remove loading indicator
+      Navigator.of(context).pop();
+
+      if (response.statusCode == 200) {
+        // API call successful
+        final analysisResult = jsonDecode(response.body);
+
+        // Show result dialog
+        showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+            title: Text('Analysis Result'),
+            content: Text(analysisResult['result']), // Adjust based on your API response structure
+            actions: <CupertinoDialogAction>[
+              CupertinoDialogAction(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      } else {
+        // API call failed
+        _showErrorDialog(context, 'Failed to analyze text. Please try again.');
+      }
+    } on TimeoutException catch (_) {
+      // Remove loading indicator
+      Navigator.of(context).pop();
+
+      // Show timeout error dialog
+      _showErrorDialog(context, 'The analysis is taking too long. Please try again later.');
+    } catch (e) {
+      // Remove loading indicator
+      Navigator.of(context).pop();
+
+      // Show general error dialog
+      _showErrorDialog(context, 'An error occurred: $e');
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
     showCupertinoDialog(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text('Context'),
-        content: Text('Context : $selectedText'),
+        title: Text('Error'),
+        content: Text(message),
         actions: <CupertinoDialogAction>[
           CupertinoDialogAction(
             child: Text('OK'),
