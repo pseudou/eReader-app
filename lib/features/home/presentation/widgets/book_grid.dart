@@ -20,7 +20,7 @@ class BookGrid extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
             (context, index) {
           return BookCover(
-            title: books[index].title,
+            book: books[index],
             onTap: () {
               Navigator.pushNamed(
                 context,

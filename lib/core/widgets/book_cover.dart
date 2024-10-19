@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import '../../features/home/data/models/book.dart';
+import 'pdf_thumbnail.dart';
 
 class BookCover extends StatelessWidget {
-  final String title;
+  final Book book;
   final VoidCallback onTap;
 
-  const BookCover({Key? key, required this.title, required this.onTap}) : super(key: key);
+  const BookCover({Key? key, required this.book, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,6 @@ class BookCover extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: CupertinoColors.systemGrey5,
                 boxShadow: [
                   BoxShadow(
                     color: CupertinoColors.systemGrey.withOpacity(0.2),
@@ -26,18 +27,15 @@ class BookCover extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Center(
-                child: Icon(
-                  CupertinoIcons.book_fill,
-                  size: 50,
-                  color: CupertinoColors.systemBlue,
-                ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: PdfThumbnail(assetPath: book.assetPath),
               ),
             ),
           ),
           SizedBox(height: 8),
           Text(
-            title,
+            book.title,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
             maxLines: 2,
