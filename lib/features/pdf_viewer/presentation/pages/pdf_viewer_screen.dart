@@ -77,7 +77,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   widget.book.assetPath,
                   canShowScrollHead: false,
                   enableDoubleTapZooming: true,
-                  pageLayoutMode: PdfPageLayoutMode.single,
+                  pageLayoutMode: PdfPageLayoutMode.continuous,
                   enableTextSelection: true,
                   canShowTextSelectionMenu: false,
                   onTextSelectionChanged: (PdfTextSelectionChangedDetails details) {
