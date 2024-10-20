@@ -37,7 +37,7 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   }
 
   Future<Map<String, dynamic>?> _analyzeText(String selectedText) async {
-    return await makePostRequest('http://127.0.0.1:5000/similar-sentences', {'sentence': selectedText,'title':'Christmas Carol'});
+    return await makePostRequest('http://127.0.0.1:5000/similar-sentences', {'sentence': selectedText,'title':'Reverend Insanity'});
   }
 
   void showAnalyzeButton(BuildContext context, PdfTextSelectionChangedDetails details) {
