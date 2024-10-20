@@ -7,7 +7,7 @@
 LoreBubbl uses AI to help people with short attention spans get contextual awareness while reading books. This was built by Aditya, Dheeraj, Sahil and Shravan during the Tidal Hackathon at TAMU.
 This repository consists of the frontend aspect of the project. LoreBubbl is built using Flutter, keeping the cross-platform support in mind.
 
-[![EuroSys 2020 Presentation Thumbnail](assets/app_icon.png)](https://www.youtube.com/watch?v=yN_OHNdW5B8 "LoreBubbl")
+Demo Link: https://www.youtube.com/watch?v=yN_OHNdW5B8 
 
 ## Inspiration
 Some of my friends have difficulties remembering things while they read books. They tend to read the same page again and again to try and remember the context of the situation or an entity.
