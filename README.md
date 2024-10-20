@@ -7,6 +7,10 @@
 LoreBubbl uses AI to help people with short attention spans get contextual awareness while reading books. This was built by Aditya, Dheeraj, Sahil and Shravan during the Tidal Hackathon at TAMU.
 This repository consists of the frontend aspect of the project. LoreBubbl is built using Flutter, keeping the cross-platform support in mind.
 
+<p align="center">
+  <iframe width="560" height="315" src="https://www.youtube.com/watch?v=yN_OHNdW5B8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
+
 ## Inspiration
 Some of my friends have difficulties remembering things while they read books. They tend to read the same page again and again to try and remember the context of the situation or an entity.
 
@@ -35,6 +39,8 @@ To solve the hallucinations, we created an *entity context retrieval* using LLMs
 *Flutter was a new domain for all of us*, and putting effort into learning a new language in under 4 hrs is something all of us are proud of.
 
 *We created a new kind of RAG* from scratch, with entity context awareness, which is very sparse in the market.
+
+[Llama LLM backend](https://github.com/reddheeraj/Text-Referencer)
 
 ## What we learned
 We didn't have any experience with mobile app development with Flutter, so that was a new learning experience.
