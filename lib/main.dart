@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: AppRouter.generateRoute,
       initialRoute: AppRouter.home,
       home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
