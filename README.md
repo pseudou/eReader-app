@@ -1,16 +1,6 @@
-# ereader_app
+# LoreBubbl  
 
-A new Flutter project.
+LoreBubbl uses AI to help people with short attention spans get contextual awareness while reading books. This was built by Aditya, Dheeraj, Sahil and Shravan during the Tidal Hackathon at TAMU.
+This repository consists of the frontend aspect of the project. LoreBubbl is built using Flutter, keeping the cross-platform support in mind.
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
