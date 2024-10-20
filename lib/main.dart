@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return CupertinoApp(
-      title: 'iOS eReader',
+      title: 'LoreBubbl',
       theme: ThemeConfig.darkTheme,
       onGenerateRoute: AppRouter.generateRoute,
       initialRoute: AppRouter.home,

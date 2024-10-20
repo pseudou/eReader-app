@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../features/home/presentation/pages/home_screen.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -29,17 +30,19 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.book,
-              size: 100,
-              color: Colors.white,
+            Image.asset(
+              AppConstants.invertedIconPath,
+              width: 100,
+              height: 100,
             ),
             SizedBox(height: 20),
             Text(
-              'eReader',
+              'LoreBubbl',
               style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+                fontFamily: '.SF Pro Display', // This will use San Francisco on iOS
+                fontSize: 34, // Large title size in iOS
+                fontWeight: FontWeight.w700, // Bold weight in iOS
+                letterSpacing: 0.37, // Slight letter spacing for large titles
                 color: Colors.white,
               ),
             ),
