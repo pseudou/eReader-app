@@ -5,7 +5,6 @@ import '../../../home/data/models/book.dart';
 import '../../../../core/utils/pdf_helper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:async';
 
 class PDFViewerScreen extends StatefulWidget {
   final Book book;
@@ -17,6 +16,7 @@ class PDFViewerScreen extends StatefulWidget {
 }
 
 class _PDFViewerScreenState extends State<PDFViewerScreen> {
+  late BuildContext _context;
   OverlayEntry? _overlayEntry;
 
   @override
@@ -28,6 +28,16 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
   void _removeOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _context =  context;
+  }
+
+  Future<Map<String, dynamic>?> _analyzeText(String selectedText) async {
+    return await makePostRequest('http://127.0.0.1:5000/similar-sentences', {'sentence': selectedText,'title':'Christmas Carol'});
   }
 
   void showAnalyzeButton(BuildContext context, PdfTextSelectionChangedDetails details) {
@@ -45,7 +55,48 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
             child: Text('Context?', style: TextStyle(color: CupertinoColors.white)),
             onPressed: () {
               _removeOverlay();
-              analyzeSelectedText(context, details.selectedText ?? '');
+              showCupertinoDialog(
+                context: context,
+                builder: (BuildContext context) => FutureBuilder<Map<String, dynamic>?>(
+                  future: _analyzeText(details.selectedText ?? ''),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CupertinoAlertDialog(
+                        title: Text('Analyzing'),
+                        content: Column(
+                          children: [
+                            CupertinoActivityIndicator(),
+                            SizedBox(height: 10),
+                            Text('Please wait...'),
+                          ],
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return CupertinoAlertDialog(
+                        title: Text('Error'),
+                        content: Text('An error occurred. Please try again.'),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: Text('OK'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return CupertinoAlertDialog(
+                        title: Text('Context'),
+                        content: Text(snapshot.data?['similar_sentences'] ?? 'No context available'),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: Text('OK'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              );
             },
           ),
         ),
@@ -82,7 +133,6 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
                   canShowTextSelectionMenu: false,
                   onTextSelectionChanged: (PdfTextSelectionChangedDetails details) {
                     if (details.selectedText != null && details.selectedText!.isNotEmpty) {
-                      print("Selected text: ${details.selectedText}");
                       showAnalyzeButton(context, details);
                     } else {
                       _removeOverlay();
@@ -100,84 +150,20 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     );
   }
 
-  Future<void> analyzeSelectedText(BuildContext context, String selectedText) async {
-    print("Analyzing: $selectedText");
-
-    // Show loading indicator
-    showCupertinoDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text('Analyzing...'),
-        content: CupertinoActivityIndicator(),
-      ),
-    );
-
+  Future<Map<String, dynamic>?> makePostRequest(String url, Map<String, dynamic> data) async {
     try {
-      // Call the API with a 30-second timeout
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:5000'),
+        Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'text': selectedText}),
-      ).timeout(Duration(seconds: 30));
-
-      // Remove loading indicator
-      Navigator.of(context).pop();
-
+        body: json.encode(data),
+      );
       if (response.statusCode == 200) {
-        // API call successful
-        final analysisResult = jsonDecode(response.body);
-
-        // Show result dialog
-        showCupertinoDialog(
-          context: context,
-          builder: (BuildContext context) => CupertinoAlertDialog(
-            title: Text('Analysis Result'),
-            content: Text(analysisResult['result']), // Adjust based on your API response structure
-            actions: <CupertinoDialogAction>[
-              CupertinoDialogAction(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      } else {
-        // API call failed
-        _showErrorDialog(context, 'Failed to analyze text. Please try again.');
+        return json.decode(response.body);
       }
-    } on TimeoutException catch (_) {
-      // Remove loading indicator
-      Navigator.of(context).pop();
-
-      // Show timeout error dialog
-      _showErrorDialog(context, 'The analysis is taking too long. Please try again later.');
     } catch (e) {
-      // Remove loading indicator
-      Navigator.of(context).pop();
-
-      // Show general error dialog
-      _showErrorDialog(context, 'An error occurred: $e');
+      print("Exception during post request call");
+      print(e);
     }
-  }
-
-  void _showErrorDialog(BuildContext context, String message) {
-    showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: <CupertinoDialogAction>[
-          CupertinoDialogAction(
-            child: Text('OK'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
+    return null;
   }
 }
